@@ -20,7 +20,7 @@ const receiveProgress = document.querySelector('progress#receiveProgress');
 const statusMessage = document.querySelector('span#status');
 const sendFileButton = document.querySelector('button#sendFile');
 
-sendFileButton.addEventListener('click', () => createDataConnection());
+sendFileButton.addEventListener('click', () => createDataConnection(true));
 
 fileInput.addEventListener('change', handleFileInputChange, false);
 
@@ -41,14 +41,17 @@ async function handleFileInputChange() {
   }
 }
 
-async function createDataConnection() {
+async function createDataConnection(propagate) {
   sendChannel = pc.createDataChannel('sendDataChannel');
   sendChannel.binaryType = 'arraybuffer';
   console.log('Created send data channel');
 
-  sendChannel.addEventListener('open', onSendChannelStateChange);
-  sendChannel.addEventListener('close', onSendChannelStateChange);
-  sendChannel.addEventListener('error', error => console.error('Error in sendChannel:', error));
+  if (propagate) {
+    sendChannel.addEventListener('open', onSendChannelStateChange);
+    sendChannel.addEventListener('close', onSendChannelStateChange);
+    sendChannel.addEventListener('error', error => console.error('Error in sendChannel:', error));
+    sendMessage({'createDataConnection': true});
+  }
 }
 
 async function onSendChannelStateChange() {
@@ -349,6 +352,8 @@ function startWebRTC(isOfferer) {
             sendMessage({'sendFile': true}); // tell the other end we got the file metadata, and OK to send
         } else if (message.sendFile) {
             sendData(); // OK to send file
+        } else if (message.createDataConnection) {
+            createDataConnection(false);
         }
     });
 }
