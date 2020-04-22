@@ -42,7 +42,7 @@ async function handleFileInputChange() {
 
 async function createDataConnection(propagate) {
   sendChannel = pc.createDataChannel('sendDataChannel');
-  sendChannel.bufferedAmountLowThreshold = 128000;
+  sendChannel.bufferedAmountLowThreshold = 300000;
   sendChannel.onbufferedamountlow = () => {
     console.debug(`on buffered amount low: ${sendChannel.bufferedAmount}`);
     sleep(10); // prevent buffer from getting full
