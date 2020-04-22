@@ -3,6 +3,14 @@ let remoteConnection;
 let sendChannel;
 let receiveChannel;
 let fileReader;
+let receiveBuffer = [];
+let receivedSize = 0;
+let bytesPrev = 0;
+let timestampPrev = 0;
+let timestampStart;
+let statsInterval = null;
+let bitrateMax = 0;
+let file;
 const bitrateDiv = document.querySelector('div#bitrate');
 const fileInput = document.querySelector('input#fileInput');
 const abortButton = document.querySelector('button#abortButton');
@@ -11,17 +19,6 @@ const sendProgress = document.querySelector('progress#sendProgress');
 const receiveProgress = document.querySelector('progress#receiveProgress');
 const statusMessage = document.querySelector('span#status');
 const sendFileButton = document.querySelector('button#sendFile');
-
-let receiveBuffer = [];
-let receivedSize = 0;
-
-let bytesPrev = 0;
-let timestampPrev = 0;
-let timestampStart;
-let statsInterval = null;
-let bitrateMax = 0;
-
-let file;
 
 sendFileButton.addEventListener('click', () => createDataConnection());
 
@@ -301,59 +298,59 @@ function startWebRTC(isOfferer) {
         if (event.candidate) {
             sendMessage({'candidate': event.candidate});
         }
-};
+    };
 
-// If user is offerer let the 'negotiationneeded' event create the offer
-if (isOfferer) {
-    pc.onnegotiationneeded = () => {
-        pc.createOffer().then(localDescCreated).catch(onError);
-    }
-}
-
-// When a remote stream arrives display it in the #remoteVideo element
-pc.ontrack = event => {
-    const stream = event.streams[0];
-    if (!remoteVideo.srcObject || remoteVideo.srcObject.id !== stream.id) {
-        remoteVideo.srcObject = stream;
-    }
-};
-
-navigator.mediaDevices.getUserMedia({
-        audio: true,
-        video: true,
-    }).then(stream => {
-        // Display your local video in #localVideo element
-        localVideo.srcObject = stream;
-        // Add your stream to be sent to the conneting peer
-        stream.getTracks().forEach(track => pc.addTrack(track, stream));
-    }, onError);
-
-// Listen to signaling data from Scaledrone
-room.on('data', (message, client) => {
-    // Message was sent by us
-    if (client.id === drone.clientId) {
-        return;
+    // If user is offerer let the 'negotiationneeded' event create the offer
+    if (isOfferer) {
+        pc.onnegotiationneeded = () => {
+            pc.createOffer().then(localDescCreated).catch(onError);
+        }
     }
 
-    if (message.sdp) {
-        // This is called after receiving an offer or answer from another peer
-        pc.setRemoteDescription(new RTCSessionDescription(message.sdp), () => {
-            // When receiving an offer lets answer it
-            if (pc.remoteDescription.type === 'offer') {
-                pc.createAnswer().then(localDescCreated).catch(onError);
-            }
+    // When a remote stream arrives display it in the #remoteVideo element
+    pc.ontrack = event => {
+        const stream = event.streams[0];
+        if (!remoteVideo.srcObject || remoteVideo.srcObject.id !== stream.id) {
+            remoteVideo.srcObject = stream;
+        }
+    };
+
+    navigator.mediaDevices.getUserMedia({
+            audio: true,
+            video: true,
+        }).then(stream => {
+            // Display your local video in #localVideo element
+            localVideo.srcObject = stream;
+            // Add your stream to be sent to the conneting peer
+            stream.getTracks().forEach(track => pc.addTrack(track, stream));
         }, onError);
-    } else if (message.candidate) {
-        // Add the new ICE candidate to our connections remote description
-        pc.addIceCandidate(new RTCIceCandidate(message.candidate), onSuccess, onError);
-    } else if (message.file) {
-        // set file info to receive
-        file = message.file;
-        sendMessage({'sendFile': true});
-    } else if (message.sendFile) {
-        sendData();
-    }
-});
+
+    // Listen to signaling data from Scaledrone
+    room.on('data', (message, client) => {
+        // Message was sent by us
+        if (client.id === drone.clientId) {
+            return;
+        }
+
+        if (message.sdp) {
+            // This is called after receiving an offer or answer from another peer
+            pc.setRemoteDescription(new RTCSessionDescription(message.sdp), () => {
+                // When receiving an offer lets answer it
+                if (pc.remoteDescription.type === 'offer') {
+                    pc.createAnswer().then(localDescCreated).catch(onError);
+                }
+            }, onError);
+        } else if (message.candidate) {
+            // Add the new ICE candidate to our connections remote description
+            pc.addIceCandidate(new RTCIceCandidate(message.candidate), onSuccess, onError);
+        } else if (message.file) {
+            // set file info to receive
+            file = message.file;
+            sendMessage({'sendFile': true}); // tell the other end we got the file metadata, and OK to send
+        } else if (message.sendFile) {
+            sendData(); // OK to send file
+        }
+    });
 }
 
 function localDescCreated(desc) {
