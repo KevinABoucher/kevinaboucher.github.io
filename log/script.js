@@ -85,7 +85,7 @@ function sendData() {
   fileReader.addEventListener('load', e => {
     console.log('FileRead.onload ', e);
     sendChannel.send(e.target.result);
-    sleep(500);
+    sleep(100); // prevent buffer from getting full
     offset += e.target.result.byteLength;
     sendProgress.value = offset;
     if (offset < file.size) {
@@ -103,12 +103,12 @@ function sendData() {
 function sleep(milliseconds) { 
     let timeStart = new Date().getTime(); 
     while (true) { 
-      let elapsedTime = new Date().getTime() - timeStart; 
-      if (elapsedTime > milliseconds) { 
-        break; 
-      } 
+        let elapsedTime = new Date().getTime() - timeStart; 
+        if (elapsedTime > milliseconds) { 
+            break; 
+        } 
     } 
-  } 
+} 
 
 function closeDataChannels() {
   console.log('Closing data channels');
