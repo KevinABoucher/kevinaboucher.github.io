@@ -37,7 +37,7 @@
         <div class="content-container">
             <div class="content-area">
                 <div class="clr-row">
-                    <div class="clr-col-3">
+                    <div class="clr-col-3" id="instructionsDiv">
                         <h3>Instructions</h3>
                         <ul>
                           <!-- <li>Enable your camera and mic</li> -->
@@ -46,7 +46,7 @@
                           <li>Send it</li>
                         </ul>
                     </div>
-                    <div class="clr-col">
+                    <div class="clr-col" id="sendDiv">
                         <form id="fileInfo" class="clr-form">
                             <input type="file" id="fileInput" name="files"/>
                         </form>
@@ -57,6 +57,8 @@
                             <progress id="sendProgress" max="100" value="0" data-displayval="0%"></progress>
                             <span></span>
                         </div>
+                    </div>
+                    <div class="clr-col" id="receiveDiv">
                         <h4>Receive progress:</h4>
                         <div class="progress labeled">
                             <progress id="receiveProgress" max="100" value="0" data-displayval="0%"></progress>

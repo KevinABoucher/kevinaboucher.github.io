@@ -18,6 +18,9 @@ const sendProgress = document.querySelector('progress#sendProgress');
 const receiveProgress = document.querySelector('progress#receiveProgress');
 const statusMessage = document.querySelector('span#status');
 const sendFileButton = document.querySelector('button#sendFile');
+const sendDiv = document.querySelector('div#sendDiv');
+const receiveDiv = document.querySelector('div#receiveDiv');
+const instructionsDiv = document.querySelector('div#instructionsDiv');
 
 sendFileButton.addEventListener('click', () => createDataConnection(true));
 
@@ -87,7 +90,7 @@ function sendData() {
     // console.log('FileRead.onload ', e);
     sendChannel.send(e.target.result);
     offset += e.target.result.byteLength;
-    // sendProgress.value = offset;
+    sendProgress.value = offset;
     if (offset < file.size) {
       readSlice(offset);
     }
@@ -172,7 +175,7 @@ function receiveChannelCallback(event) {
 }
 
 function onReceiveMessageCallback(event) {
-  console.log(`Received Message ${event.data.byteLength}`);
+  //console.log(`Received Message ${event.data.byteLength}`);
   receiveBuffer.push(event.data);
   receivedSize += event.data.byteLength;
 
@@ -223,6 +226,10 @@ function createUUID() {
 // Generate random room name if needed
 if (!location.hash) {
     location.hash = createUUID();
+    receiveDiv.style.display = 'none';
+} else {
+    sendDiv.style.display = 'none';
+    instructionsDiv.style.display = 'none';
 }
 const roomHash = location.hash.substring(1);
 
@@ -332,6 +339,7 @@ function startWebRTC(isOfferer) {
             sendProgress.value = 0;
             receiveProgress.value = 0;
             receiveProgress.max = file.size;
+            bitrateDiv.innerHTML = `<strong>Receiving:</strong> ${file.name} (${file.size} bytes)`;
             sendMessage({'sendFile': true}); // tell the other end we got the file metadata, and OK to send
         } else if (message.sendFile) {
             sendData(); // OK to send file
