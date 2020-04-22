@@ -10,12 +10,17 @@
     <script src="https://unpkg.com/clarity-icons/clarity-icons.min.js"></script>
   <style>
     video {
-        max-width: calc(50% - 100px);
+        max-width: calc(80%);
         margin: 0 50px;
         box-sizing: border-box;
-        border-radius: 2px;
+        border-radius: 4px;
         padding: 0;
         box-shadow: rgba(156, 172, 172, 0.2) 0px 2px 2px, rgba(156, 172, 172, 0.2) 0px 4px 4px, rgba(156, 172, 172, 0.2) 0px 8px 8px, rgba(156, 172, 172, 0.2) 0px 16px 16px, rgba(156, 172, 172, 0.2) 0px 32px 32px, rgba(156, 172, 172, 0.2) 0px 64px 64px;
+    }
+    .robot {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
     }
   </style>
 </head>
@@ -24,15 +29,46 @@
         <header class="header-2">
           <div class="branding">
               <a class="nav-link">
-                  <clr-icon shape="bug" size="24"></clr-icon>
-                  <span class="title">Secure Log Transfer</span>
+                  <clr-icon shape="shield-check" size="24"></clr-icon>
+                  <span class="title">Secure Support</span>
               </a>
           </div>
       </header>
         <div class="content-container">
             <div class="content-area">
                 <div class="clr-row">
+                    <div class="clr-col-3">
+                        <h3>Instructions</h3>
+                        <ul>
+                          <li>Enable your camera and mic</li>
+                          <li>Share your URL to start a support call</li>
+                          <li>Choose your file to share</li>
+                          <li>Send it</li>
+                        </ul>
+                    </div>
                     <div class="clr-col">
+                        <form id="fileInfo" class="clr-form">
+                            <input type="file" id="fileInput" name="files"/>
+                        </form>
+                        <button disabled class="btn btn-primary" id="sendFile">Send</button>
+                        <button disabled class="btn btn-danger-outline" id="abortButton">Abort</button>
+                        <h4>Send progress:</h4>
+                        <div class="progress labeled">
+                            <progress id="sendProgress" max="100" value="0" data-displayval="0%"></progress>
+                            <span></span>
+                        </div>
+                        <h4>Receive progress:</h4>
+                        <div class="progress labeled">
+                            <progress id="receiveProgress" max="100" value="0" data-displayval="0%"></progress>
+                            <span></span>
+                        </div>
+                        <div>
+                            <div id="bitrate"></div>
+                            <a id="download"></a>
+                            <span id="status"></span>
+                        </div>
+                    </div>
+                    <div class="clr-col-3 robot">
                         <svg height="200" viewBox="0 0 500 316" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M138.282 158.809C158.809 158.809 175.449 142.147 175.449 121.595C175.449 101.042 158.809 84.3808 138.282 84.3808C117.756 84.3808 101.115 101.042 101.115 121.595C101.115 142.147 117.756 158.809 138.282 158.809Z" stroke="#81C6ED" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path>
                             <path d="M427.933 224.497C439.774 224.497 449.374 214.886 449.374 203.03C449.374 191.173 439.774 181.562 427.933 181.562C416.092 181.562 406.492 191.173 406.492 203.03C406.492 214.886 416.092 224.497 427.933 224.497Z" stroke="#81C6ED" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path>
@@ -229,45 +265,11 @@
                             </defs>
                         </svg>
                     </div>
-                    <div class="clr-col">
-                        <h3>Instructions</h3>
-                        <ul>
-                          <li>Enable your camera and mic</li>
-                          <li>Send your URL to support to start a video call</li>
-                          <li>Choose your log bundle</li>
-                          <li>Send it</li>
-                        </ul>
-                    </div>
-                    <div class="clr-col">
-                    </div>
-                    <div class="clr-col-6">
-                        <form id="fileInfo" class="clr-form">
-                            <input type="file" id="fileInput" name="files"/>
-                        </form>
-                        <button disabled class="btn btn-primary" id="sendFile">Send</button>
-                        <button disabled class="btn btn-danger-outline" id="abortButton">Abort</button>
-                        <h4>Send progress:</h4>
-                        <div class="progress labeled">
-                            <progress id="sendProgress" max="100" value="0" data-displayval="0%"></progress>
-                            <span></span>
-                        </div>
-                        <h4>Receive progress:</h4>
-                        <div class="progress labeled">
-                            <progress id="receiveProgress" max="100" value="0" data-displayval="0%"></progress>
-                            <span></span>
-                        </div>
-                
-                        <div>
-                            <div id="bitrate"></div>
-                            <a id="download"></a>
-                            <span id="status"></span>
-                        </div>
-                    </div>
                 </div>
                 <div class="clr-row">
-                    <div class="card clr-col">
+                    <div class="card clr-col-6">
                         <div class="card-header">
-                            Local
+                            <clr-icon shape="user"></clr-icon> Local
                         </div>
                         <div class="card-block">
                             <div class="card-text">
@@ -275,9 +277,9 @@
                             </div>
                         </div>
                     </div>
-                    <div class="card clr-col">
+                    <div class="card clr-col-6">
                         <div class="card-header">
-                            Remote Support
+                            <clr-icon shape="administrator"></clr-icon> Support
                         </div>
                         <div class="card-block">
                             <div class="card-text">
