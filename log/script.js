@@ -42,6 +42,12 @@ async function handleFileInputChange() {
 
 async function createDataConnection(propagate) {
   sendChannel = pc.createDataChannel('sendDataChannel');
+  sendChannel.bufferedAmountLowThreshold = 128000;
+  sendChannel.onbufferedamountlow = () => {
+    console.debug(`on buffered amount low: ${sendChannel.bufferedAmount}`);
+    sleep(10); // prevent buffer from getting full
+  };
+
   sendChannel.binaryType = 'arraybuffer';
   console.log('Created send data channel');
 
@@ -84,7 +90,7 @@ function sendData() {
   fileReader.addEventListener('load', e => {
     console.log('FileRead.onload ', e);
     sendChannel.send(e.target.result);
-    sleep(10); // prevent buffer from getting full
+    //sleep(10); // prevent buffer from getting full
     offset += e.target.result.byteLength;
     sendProgress.value = offset;
     if (offset < file.size) {
