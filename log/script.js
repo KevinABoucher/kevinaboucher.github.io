@@ -85,7 +85,7 @@ function sendData() {
   fileReader.addEventListener('load', e => {
     console.log('FileRead.onload ', e);
     sendChannel.send(e.target.result);
-    sleep(100); // prevent buffer from getting full
+    sleep(10); // prevent buffer from getting full
     offset += e.target.result.byteLength;
     sendProgress.value = offset;
     if (offset < file.size) {
@@ -360,6 +360,7 @@ function startWebRTC(isOfferer) {
         } else if (message.file) {
             // set file info to receive
             file = message.file;
+            receiveProgress.max = file.size;
             sendMessage({'sendFile': true}); // tell the other end we got the file metadata, and OK to send
         } else if (message.sendFile) {
             sendData(); // OK to send file
