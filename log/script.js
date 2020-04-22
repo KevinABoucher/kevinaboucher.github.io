@@ -23,7 +23,7 @@ let bitrateMax = 0;
 
 let file;
 
-sendFileButton.addEventListener('click', () => sendData());
+sendFileButton.addEventListener('click', () => createDataConnection());
 
 fileInput.addEventListener('change', handleFileInputChange, false);
 
@@ -40,25 +40,30 @@ async function handleFileInputChange() {
   if (!file) {
     console.log('No file chosen');
   } else {
-    sendMessage({'file': { name: file.name, size: file.size, type: file.type, lastModified: file.lastModified }});
-    createDataConnection();
     sendFileButton.disabled = false;
   }
 }
 
-function createDataConnection() {
+async function createDataConnection() {
   sendChannel = pc.createDataChannel('sendDataChannel');
   sendChannel.binaryType = 'arraybuffer';
   console.log('Created send data channel');
 
-//   sendChannel.addEventListener('open', onSendChannelStateChange);
-//   sendChannel.addEventListener('close', onSendChannelStateChange);
+  sendChannel.addEventListener('open', onSendChannelStateChange);
+  sendChannel.addEventListener('close', onSendChannelStateChange);
   sendChannel.addEventListener('error', error => console.error('Error in sendChannel:', error));
-
-  fileInput.disabled = true;
 }
 
-async function sendData() {
+async function onSendChannelStateChange() {
+  const readyState = sendChannel.readyState;
+  console.log(`Send channel state is: ${readyState}`);
+  if (readyState === 'open') {
+    console.log('data channel open, sending file info');
+    sendMessage({'file': { name: file.name, size: file.size, type: file.type, lastModified: file.lastModified }});
+  }
+}
+
+function sendData() {
   console.log(`File is ${[file.name, file.size, file.type, file.lastModified].join(' ')}`);
 
   // Handle 0 size files.
@@ -187,14 +192,6 @@ function onReceiveMessageCallback(event) {
     closeDataChannels();
   }
 }
-
-// async function onSendChannelStateChange() {
-//   const readyState = sendChannel.readyState;
-//   console.log(`Send channel state is: ${readyState}`);
-//   if (readyState === 'open') {
-//     sendData();
-//   }
-// }
 
 async function onReceiveChannelStateChange() {
   const readyState = receiveChannel.readyState;
@@ -352,6 +349,9 @@ room.on('data', (message, client) => {
     } else if (message.file) {
         // set file info to receive
         file = message.file;
+        sendMessage({'sendFile': true});
+    } else if (message.sendFile) {
+        sendData();
     }
 });
 }
