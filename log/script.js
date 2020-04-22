@@ -9,7 +9,6 @@ let bytesPrev = 0;
 let timestampPrev = 0;
 let timestampStart;
 let statsInterval = null;
-let bitrateMax = 0;
 let file;
 const bitrateDiv = document.querySelector('div#bitrate');
 const fileInput = document.querySelector('input#fileInput');
@@ -163,7 +162,6 @@ function receiveChannelCallback(event) {
   receiveChannel.onclose = onReceiveChannelStateChange;
 
   receivedSize = 0;
-  bitrateMax = 0;
   downloadAnchor.textContent = '';
   downloadAnchor.removeAttribute('download');
   if (downloadAnchor.href) {
@@ -193,7 +191,7 @@ function onReceiveMessageCallback(event) {
     const bitrate = Math.round(receivedSize * 8 /
       ((new Date()).getTime() - timestampStart));
     bitrateDiv.innerHTML =
-      `<strong>Average Bitrate:</strong> ${bitrate} kbits/sec (max: ${bitrateMax} kbits/sec)`;
+      `<strong>Average Bitrate:</strong> ${bitrate} kbits/sec`;
 
     if (statsInterval) {
       clearInterval(statsInterval);
@@ -210,36 +208,6 @@ async function onReceiveChannelStateChange() {
   if (readyState === 'open') {
     timestampStart = (new Date()).getTime();
     timestampPrev = timestampStart;
-    statsInterval = setInterval(displayStats, 500);
-    await displayStats();
-  }
-}
-
-// display bitrate statistics.
-async function displayStats() {
-  if (remoteConnection && remoteConnection.iceConnectionState === 'connected') {
-    const stats = await remoteConnection.getStats();
-    let activeCandidatePair;
-    stats.forEach(report => {
-      if (report.type === 'transport') {
-        activeCandidatePair = stats.get(report.selectedCandidatePairId);
-      }
-    });
-    if (activeCandidatePair) {
-      if (timestampPrev === activeCandidatePair.timestamp) {
-        return;
-      }
-      // calculate current bitrate
-      const bytesNow = activeCandidatePair.bytesReceived;
-      const bitrate = Math.round((bytesNow - bytesPrev) * 8 /
-        (activeCandidatePair.timestamp - timestampPrev));
-      bitrateDiv.innerHTML = `<strong>Current Bitrate:</strong> ${bitrate} kbits/sec`;
-      timestampPrev = activeCandidatePair.timestamp;
-      bytesPrev = bytesNow;
-      if (bitrate > bitrateMax) {
-        bitrateMax = bitrate;
-      }
-    }
   }
 }
 
