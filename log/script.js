@@ -32,6 +32,8 @@ abortButton.addEventListener('click', () => {
 
 async function handleFileInputChange() {
   file = fileInput.files[0];
+  sendProgress.value = 0;
+  receiveProgress.value = 0;
 
   if (!file) {
     console.log('No file chosen');
@@ -76,7 +78,7 @@ function sendData() {
   }
   sendProgress.max = file.size;
   receiveProgress.max = file.size;
-  const chunkSize = 1024;
+  const chunkSize = 4028;
   fileReader = new FileReader();
   let offset = 0;
   fileReader.addEventListener('error', error => console.error('Error reading file:', error));
@@ -327,6 +329,8 @@ function startWebRTC(isOfferer) {
         } else if (message.file) {
             // set file info to receive
             file = message.file;
+            sendProgress.value = 0;
+            receiveProgress.value = 0;
             receiveProgress.max = file.size;
             sendMessage({'sendFile': true}); // tell the other end we got the file metadata, and OK to send
         } else if (message.sendFile) {
