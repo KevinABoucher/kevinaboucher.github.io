@@ -78,22 +78,22 @@ function sendData() {
   }
   sendProgress.max = file.size;
   receiveProgress.max = file.size;
-  const chunkSize = 4028;
+  const chunkSize = 1024;
   fileReader = new FileReader();
   let offset = 0;
   fileReader.addEventListener('error', error => console.error('Error reading file:', error));
   fileReader.addEventListener('abort', event => console.log('File reading aborted:', event));
   fileReader.addEventListener('load', e => {
-    console.log('FileRead.onload ', e);
+    // console.log('FileRead.onload ', e);
     sendChannel.send(e.target.result);
     offset += e.target.result.byteLength;
-    sendProgress.value = offset;
+    // sendProgress.value = offset;
     if (offset < file.size) {
       readSlice(offset);
     }
   });
   const readSlice = o => {
-    console.log('readSlice ', o);
+    // console.log('readSlice ', o);
     const slice = file.slice(offset, o + chunkSize);
     fileReader.readAsArrayBuffer(slice);
   };
