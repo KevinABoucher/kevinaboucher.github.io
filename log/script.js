@@ -42,12 +42,6 @@ async function handleFileInputChange() {
 
 async function createDataConnection(propagate) {
   sendChannel = pc.createDataChannel('sendDataChannel');
-  sendChannel.bufferedAmountLowThreshold = 300000;
-  sendChannel.onbufferedamountlow = () => {
-    console.debug(`on buffered amount low: ${sendChannel.bufferedAmount}`);
-    sleep(10); // prevent buffer from getting full
-  };
-
   sendChannel.binaryType = 'arraybuffer';
   console.log('Created send data channel');
 
@@ -82,7 +76,7 @@ function sendData() {
   }
   sendProgress.max = file.size;
   receiveProgress.max = file.size;
-  const chunkSize = 16384;
+  const chunkSize = 1024;
   fileReader = new FileReader();
   let offset = 0;
   fileReader.addEventListener('error', error => console.error('Error reading file:', error));
@@ -90,7 +84,6 @@ function sendData() {
   fileReader.addEventListener('load', e => {
     console.log('FileRead.onload ', e);
     sendChannel.send(e.target.result);
-    //sleep(10); // prevent buffer from getting full
     offset += e.target.result.byteLength;
     sendProgress.value = offset;
     if (offset < file.size) {
