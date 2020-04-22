@@ -21,6 +21,7 @@ const sendFileButton = document.querySelector('button#sendFile');
 const sendDiv = document.querySelector('div#sendDiv');
 const receiveDiv = document.querySelector('div#receiveDiv');
 const instructionsDiv = document.querySelector('div#instructionsDiv');
+const sendStatusDiv = document.querySelector('div#sendStatusDiv');
 
 sendFileButton.addEventListener('click', () => createDataConnection(true));
 
@@ -93,6 +94,8 @@ function sendData() {
     sendProgress.value = offset;
     if (offset < file.size) {
       readSlice(offset);
+    } else {
+      sendStatusDiv.innerHTML = `<strong>File sent successfully:</strong> ${file.name} (${file.size} bytes)`;
     }
   });
   const readSlice = o => {
