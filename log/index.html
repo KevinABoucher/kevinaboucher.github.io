@@ -7,37 +7,36 @@
     <link rel="stylesheet" href="https://unpkg.com/@clr/ui@3.1.0/clr-ui.min.css" />
     <link rel="stylesheet" href="https://unpkg.com/clarity-icons/clarity-icons.min.css">
     <script src="https://unpkg.com/clarity-icons/clarity-icons.min.js"></script>
-
-  <style>
-    video {
-        max-width: calc(80%);
-        margin: 0 50px;
-        box-sizing: border-box;
-        border-radius: 4px;
-        padding: 0;
-        box-shadow: rgba(156, 172, 172, 0.2) 0px 2px 2px, rgba(156, 172, 172, 0.2) 0px 4px 4px, rgba(156, 172, 172, 0.2) 0px 8px 8px, rgba(156, 172, 172, 0.2) 0px 16px 16px, rgba(156, 172, 172, 0.2) 0px 32px 32px, rgba(156, 172, 172, 0.2) 0px 64px 64px;
-    }
-    .robot {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-end;
-    }
-  </style>
+    <style>
+        video {
+            max-width: calc(80%);
+            margin: 0 50px;
+            box-sizing: border-box;
+            border-radius: 4px;
+            padding: 0;
+            box-shadow: rgba(156, 172, 172, 0.2) 0px 2px 2px, rgba(156, 172, 172, 0.2) 0px 4px 4px, rgba(156, 172, 172, 0.2) 0px 8px 8px, rgba(156, 172, 172, 0.2) 0px 16px 16px, rgba(156, 172, 172, 0.2) 0px 32px 32px, rgba(156, 172, 172, 0.2) 0px 64px 64px;
+        }
+        .robot {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+    </style>
 </head>
 <body>
     <div class="main-container">
         <header class="header-2">
-          <div class="branding">
-              <a class="nav-link">
-                  <clr-icon shape="shield-check" size="24"></clr-icon>
-                  <span class="title">Direct File Transfer</span>
-              </a>
-          </div>
-          <div class="header-actions">
-            <span id="disconnected" class="label label-danger" style="margin-top:1rem;display:block;padding-top:.1rem;"><clr-icon shape="disconnect" class="is-error"></clr-icon>&nbsp;Disconnected</span>
-            <span id="connected" class="label label-success" style="margin-top:1rem;display:none;padding-top:.1rem;"><clr-icon shape="connect" class="is-success"></clr-icon>&nbsp;Connected</span>
-        </div>
-      </header>
+            <div class="branding">
+                <a class="nav-link">
+                    <clr-icon shape="shield-check" size="24"></clr-icon>
+                    <span class="title">Direct File Transfer</span>
+                </a>
+            </div>
+            <div class="header-actions">
+                <span id="disconnected" class="label label-danger" style="margin:1rem 1rem;display:block;padding-top:.1rem;"><clr-icon shape="disconnect" class="is-error"></clr-icon>&nbsp;Disconnected</span>
+                <span id="connected" class="label label-success" style="margin:1rem 1rem;display:none;padding-top:.1rem;"><clr-icon shape="connect" class="is-success"></clr-icon>&nbsp;Connected</span>
+            </div>
+        </header>
         <div class="content-container">
             <div class="content-area">
                 <div class="clr-row">
