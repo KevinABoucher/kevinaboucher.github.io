@@ -25,6 +25,7 @@ const instructionsDiv = document.querySelector('div#instructionsDiv');
 const sendStatusDiv = document.querySelector('div#sendStatusDiv');
 const connected = document.querySelector('#connected');
 const disconnected = document.querySelector('#disconnected');
+const chunkSize = 1024 * 16;
 
 function copyUrl() {
     var input = document.createElement('input');
@@ -103,7 +104,6 @@ function sendData() {
   }
   sendProgress.max = file.size;
   receiveProgress.max = file.size;
-  const chunkSize = 1024;
   fileReader = new FileReader();
   let offset = 0;
   fileReader.addEventListener('error', error => console.error('Error reading file:', error));
@@ -405,5 +405,7 @@ function localDescCreated(desc) {
         () => sendMessage({'sdp': pc.localDescription}),
         onError
     );
-    pc.addEventListener('datachannel', receiveChannelCallback);
+    if (!isSender) {
+      pc.addEventListener('datachannel', receiveChannelCallback);
+    }
 }
