@@ -385,9 +385,11 @@ function startWebRTC(isOfferer) {
             sendMessage({'senderConnected': true});
         } else if (message.senderConnected) {
             setConnected(true);
-        } else if (!message.receiverConnected || !message.senderConnected) {
+        } else if (!message.receiverConnected) {
             setConnected(false);
-        }
+        } else if (!message.senderConnected) {
+            setConnected(false);
+        } 
     });
 }
 
