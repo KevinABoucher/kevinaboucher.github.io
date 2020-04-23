@@ -23,6 +23,16 @@ const receiveDiv = document.querySelector('div#receiveDiv');
 const instructionsDiv = document.querySelector('div#instructionsDiv');
 const sendStatusDiv = document.querySelector('div#sendStatusDiv');
 
+function copyUrl() {
+    var input = document.createElement('input');
+    input.setAttribute('value', document.location.href);
+    document.body.appendChild(input);
+    input.select();
+    var result = document.execCommand('copy');
+    document.body.removeChild(input);
+    return result;
+}
+
 sendFileButton.addEventListener('click', () => createDataConnection(true));
 
 fileInput.addEventListener('change', handleFileInputChange, false);
@@ -198,7 +208,7 @@ function onReceiveMessageCallback(event) {
     const bitrate = Math.round(receivedSize * 8 /
       ((new Date()).getTime() - timestampStart));
     bitrateDiv.innerHTML =
-      `<strong>Average Bitrate:</strong> ${bitrate} kbits/sec`;
+      `<strong>Average bitrate:</strong> ${bitrate} kbits/sec`;
 
     if (statsInterval) {
       clearInterval(statsInterval);

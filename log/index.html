@@ -6,8 +6,8 @@
     <meta name="viewport" content="width=device-width">
     <link rel="stylesheet" href="https://unpkg.com/@clr/ui@3.1.0/clr-ui.min.css" />
     <link rel="stylesheet" href="https://unpkg.com/clarity-icons/clarity-icons.min.css">
-    <script src="https://unpkg.com/@webcomponents/custom-elements/custom-elements.min.js"></script>
     <script src="https://unpkg.com/clarity-icons/clarity-icons.min.js"></script>
+
   <style>
     video {
         max-width: calc(80%);
@@ -41,10 +41,14 @@
                         <h3>Instructions</h3>
                         <ul>
                           <!-- <li>Enable your camera and mic</li> -->
-                          <li>Share your URL to start</li>
+                          <li>Share your URL to start
+                          </li>
                           <li>Choose your file to share</li>
                           <li>Send it</li>
                         </ul>
+                        <button type="button" onclick="copyUrl()" class="btn btn-link" aria-label="Copy URL">
+                            <clr-icon shape="copy"></clr-icon> Copy URL
+                        </button>
                     </div>
                     <div class="clr-col" id="sendDiv">
                         <form id="fileInfo" class="clr-form">
@@ -298,7 +302,7 @@
             </div>
         </div>
     </div>
-  <!-- <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script> -->
+  <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
