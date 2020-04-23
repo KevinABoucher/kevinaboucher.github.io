@@ -87,10 +87,6 @@ async function onSendChannelStateChange() {
     console.log('data channel open, sending file info');
     sendMessage({'file': { name: file.name, size: file.size, type: file.type, lastModified: file.lastModified }});
   }
-  if (readyState === 'closed') {
-    console.log('data channel closed');
-    setConnected(false);
-  }
 }
 
 function sendData() {
