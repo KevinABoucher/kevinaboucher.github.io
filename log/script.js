@@ -25,7 +25,7 @@ const instructionsDiv = document.querySelector('div#instructionsDiv');
 const sendStatusDiv = document.querySelector('div#sendStatusDiv');
 const connected = document.querySelector('#connected');
 const disconnected = document.querySelector('#disconnected');
-const chunkSize = 1024 * 16;
+const chunkSize = 1024;
 
 function copyUrl() {
     var input = document.createElement('input');
