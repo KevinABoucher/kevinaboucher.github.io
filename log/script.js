@@ -10,6 +10,7 @@ let timestampPrev = 0;
 let timestampStart;
 let statsInterval = null;
 let file;
+let isSender = true;
 const bitrateDiv = document.querySelector('div#bitrate');
 const fileInput = document.querySelector('input#fileInput');
 const abortButton = document.querySelector('button#abortButton');
@@ -22,6 +23,8 @@ const sendDiv = document.querySelector('div#sendDiv');
 const receiveDiv = document.querySelector('div#receiveDiv');
 const instructionsDiv = document.querySelector('div#instructionsDiv');
 const sendStatusDiv = document.querySelector('div#sendStatusDiv');
+const connected = document.querySelector('#connected');
+const disconnected = document.querySelector('#disconnected');
 
 function copyUrl() {
     var input = document.createElement('input');
@@ -31,6 +34,14 @@ function copyUrl() {
     var result = document.execCommand('copy');
     document.body.removeChild(input);
     return result;
+}
+
+window.onbeforeunload = function () {
+    if (isSender) {
+        sendMessage({'senderConnected': false});
+    } else {
+        sendMessage({'receiverConnected': false});
+    }
 }
 
 sendFileButton.addEventListener('click', () => createDataConnection(true));
@@ -75,6 +86,10 @@ async function onSendChannelStateChange() {
   if (readyState === 'open') {
     console.log('data channel open, sending file info');
     sendMessage({'file': { name: file.name, size: file.size, type: file.type, lastModified: file.lastModified }});
+  }
+  if (readyState === 'closed') {
+    console.log('data channel closed');
+    setConnected(false);
   }
 }
 
@@ -240,9 +255,11 @@ function createUUID() {
 if (!location.hash) {
     location.hash = createUUID();
     receiveDiv.style.display = 'none';
+    isSender = true;
 } else {
     sendDiv.style.display = 'none';
     instructionsDiv.style.display = 'none';
+    isSender = false;
 }
 const roomHash = location.hash.substring(1);
 
@@ -271,7 +288,7 @@ drone.on('open', error => {
     room = drone.subscribe(roomName);
     room.on('open', error => {
         if (error) {
-        onError(error);
+          onError(error);
         }
     });
     // We're connected to the room and received an array of 'members'
@@ -281,6 +298,9 @@ drone.on('open', error => {
         // If we are the second user to connect to the room we will be creating the offer
         const isOfferer = members.length === 2;
         startWebRTC(isOfferer);
+        if (!isSender) {
+          sendMessage({'receiverConnected': true});
+        }
     });
 });
 
@@ -343,9 +363,11 @@ function startWebRTC(isOfferer) {
                     pc.createAnswer().then(localDescCreated).catch(onError);
                 }
             }, onError);
+            console.log('Offer');
         } else if (message.candidate) {
             // Add the new ICE candidate to our connections remote description
             pc.addIceCandidate(new RTCIceCandidate(message.candidate), onSuccess, onError);
+            console.log('ICE');
         } else if (message.file) {
             // set file info to receive
             file = message.file;
@@ -358,8 +380,25 @@ function startWebRTC(isOfferer) {
             sendData(); // OK to send file
         } else if (message.createDataConnection) {
             createDataConnection(false);
+        } else if (message.receiverConnected) {
+            setConnected(true);
+            sendMessage({'senderConnected': true});
+        } else if (message.senderConnected) {
+            setConnected(true);
+        } else if (!message.receiverConnected || !message.senderConnected) {
+            setConnected(false);
         }
     });
+}
+
+function setConnected(isConnected) {
+    if (isConnected) {
+        connected.style.display = 'block';
+        disconnected.style.display = 'none';
+    } else {
+        connected.style.display = 'none';
+        disconnected.style.display = 'block';
+    }
 }
 
 function localDescCreated(desc) {
