@@ -405,7 +405,7 @@ function localDescCreated(desc) {
         () => sendMessage({'sdp': pc.localDescription}),
         onError
     );
-    // if (!isSender) {
+    if (!isSender) {
       pc.addEventListener('datachannel', receiveChannelCallback);
-    // }
+    }
 }
