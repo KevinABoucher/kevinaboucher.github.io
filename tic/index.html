@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script type='text/javascript' src='https://cdn.scaledrone.com/scaledrone.min.js'></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <link rel="stylesheet" href="https://unpkg.com/@clr/ui@3.1.0/clr-ui.min.css" />
+    <link rel="stylesheet" href="https://unpkg.com/clarity-icons/clarity-icons.min.css">
+    <script src="https://unpkg.com/clarity-icons/clarity-icons.min.js"></script>
+    <style>
+        video {
+            max-width: calc(80%);
+            margin: 0 50px;
+            box-sizing: border-box;
+            border-radius: 4px;
+            padding: 0;
+            box-shadow: rgba(156, 172, 172, 0.2) 0px 2px 2px, rgba(156, 172, 172, 0.2) 0px 4px 4px, rgba(156, 172, 172, 0.2) 0px 8px 8px, rgba(156, 172, 172, 0.2) 0px 16px 16px, rgba(156, 172, 172, 0.2) 0px 32px 32px, rgba(156, 172, 172, 0.2) 0px 64px 64px;
+        }
+        .main-container {
+            background: url(./back.png) no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100%;
+            overflow: hidden;
+        }
+        #status {
+            font-family: Lato;
+        }
+        td {
+            border: 1px solid black;
+            height: 50px;
+            width: 50px;
+            font-family: Lato;
+            text-align: center;
+            font-size: xx-large;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="content-container">
+            <div class="content-area">
+                <div class="clr-row">
+                    <div class="clr-col">
+                        <h1>Tic Tac Quarantine</h1>
+                        <span id="disconnected" class="label label-danger"><clr-icon shape="disconnect" class="is-error"></clr-icon>&nbsp;Disconnected</span>
+                        <span id="connected" class="label label-success" style="display:none;"><clr-icon shape="connect" class="is-success"></clr-icon>&nbsp;Connected</span>
+                    </div>
+                    <div class="clr-col">
+                        <div id="board">
+                            <div id="status"></div>
+                            <table>
+                            <tr>
+                                <td id="1" onclick="onTic(this.id)"></td>
+                                <td id="2" onclick="onTic(this.id)"></td>
+                                <td id="3" onclick="onTic(this.id)"></td>
+                            </tr>
+                            <tr>
+                                <td id="4" onclick="onTic(this.id)"></td>
+                                <td id="5" onclick="onTic(this.id)"></td>
+                                <td id="6" onclick="onTic(this.id)"></td>
+                            </tr>
+                            <tr>
+                                <td id="7" onclick="onTic(this.id)"></td>
+                                <td id="8" onclick="onTic(this.id)"></td>
+                                <td id="9" onclick="onTic(this.id)"></td>
+                            </tr>
+                            </table>
+                            <button class="btn btn-primary" onclick="newGame()">New Game</button>
+                        </div>
+                      </div>
+                      <div class="clr-col"></div>
+                </div>
+                <div class="clr-row">
+                </div>
+                <div class="clr-row">
+                    <div class="clr-col">
+                        <video id="localVideo" autoplay muted></video>
+                    </div>
+                    <div class="clr-col-1"></div>
+                    <div class="clr-col">
+                        <video id="remoteVideo" autoplay></video>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+  <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
