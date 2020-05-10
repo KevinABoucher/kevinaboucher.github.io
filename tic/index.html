@@ -27,11 +27,15 @@
         }
         td {
             border: 1px solid black;
-            height: 50px;
-            width: 50px;
+            height: 70px;
+            width: 70px;
             font-family: Lato;
             text-align: center;
             font-size: xx-large;
+        }
+        .board {
+            margin-left:auto; 
+            margin-right:auto;
         }
     </style>
 </head>
@@ -45,30 +49,35 @@
                         <span id="disconnected" class="label label-danger"><clr-icon shape="disconnect" class="is-error"></clr-icon>&nbsp;Disconnected</span>
                         <span id="connected" class="label label-success" style="display:none;"><clr-icon shape="connect" class="is-success"></clr-icon>&nbsp;Connected</span>
                     </div>
+                </div>
+                <div class="clr-row">
                     <div class="clr-col">
-                        <div id="board">
+                    </div>
+                    <div class="clr-col">
+                        <div id="board" class="board">
                             <div id="status"></div>
                             <table>
-                            <tr>
-                                <td id="1" onclick="onTic(this.id)"></td>
-                                <td id="2" onclick="onTic(this.id)"></td>
-                                <td id="3" onclick="onTic(this.id)"></td>
-                            </tr>
-                            <tr>
-                                <td id="4" onclick="onTic(this.id)"></td>
-                                <td id="5" onclick="onTic(this.id)"></td>
-                                <td id="6" onclick="onTic(this.id)"></td>
-                            </tr>
-                            <tr>
-                                <td id="7" onclick="onTic(this.id)"></td>
-                                <td id="8" onclick="onTic(this.id)"></td>
-                                <td id="9" onclick="onTic(this.id)"></td>
-                            </tr>
+                                <tr>
+                                    <td id="1" onclick="onTic(this.id)"></td>
+                                    <td id="2" onclick="onTic(this.id)"></td>
+                                    <td id="3" onclick="onTic(this.id)"></td>
+                                </tr>
+                                <tr>
+                                    <td id="4" onclick="onTic(this.id)"></td>
+                                    <td id="5" onclick="onTic(this.id)"></td>
+                                    <td id="6" onclick="onTic(this.id)"></td>
+                                </tr>
+                                <tr>
+                                    <td id="7" onclick="onTic(this.id)"></td>
+                                    <td id="8" onclick="onTic(this.id)"></td>
+                                    <td id="9" onclick="onTic(this.id)"></td>
+                                </tr>
                             </table>
                             <button class="btn btn-primary" onclick="newGame()">New Game</button>
                         </div>
-                      </div>
-                      <div class="clr-col"></div>
+                    </div>
+                    <div class="clr-col">
+                    </div>
                 </div>
                 <div class="clr-row">
                 </div>
@@ -76,12 +85,12 @@
                     <div class="clr-col">
                         <video id="localVideo" autoplay muted></video>
                     </div>
-                    <div class="clr-col-1"></div>
+                    <div class="clr-col-1">
+                    </div>
                     <div class="clr-col">
                         <video id="remoteVideo" autoplay></video>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
