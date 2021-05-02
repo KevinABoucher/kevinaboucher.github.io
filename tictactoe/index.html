@@ -1,0 +1,207 @@
+<html>
+    <head>
+    <script type="text/javascript">
+        var X = 'X';
+        var O = 'O';
+        var EMPTY = '';
+        var winners = [ [1, 2, 3],
+                        [4, 5, 6],
+                        [7, 8, 9],
+                        [1, 4, 7],
+                        [2, 5, 8],
+                        [3, 6, 9],
+                        [1, 5, 9],
+                        [3, 5, 7] ];
+            var dangerous = [ [1, 9],
+                            [3, 7]];              
+        
+        function tic(id, c) {
+            var current = document.getElementById(id);
+            if (current.innerHTML !== '') {
+            return;
+            }
+            current.innerHTML = c;
+            if (!checkWinner() && c === X) {
+            runAI();
+            }
+        }
+        
+        function checkValue(id, c) {
+            return document.getElementById(id).innerHTML === c;
+        }
+        
+        function setValue(id, c) {
+            document.getElementById(id).innerHTML = c;
+        }
+        
+        function runAI() {
+            for (var i=0; i < 8; i++) {
+            
+                var a = winners[i][0];
+                var b = winners[i][1];
+                var c = winners[i][2];
+        
+                var count = 0;
+                if (checkValue(a, O)) {
+                count++;
+                }
+                if (checkValue(b, O)) {
+                count++;
+                }
+                if (checkValue(c, O)) {
+                count++;
+                }
+        
+                // win if you can
+                if (count == 2) {
+                for (var j=0; j < 3; j++) {
+                    if (checkValue(winners[i][j], EMPTY)) {
+                    tic(winners[i][j], O);
+                    return;
+                    }
+                }
+                }
+            }
+        
+            for (var i=0; i < 8; i++) {
+            
+                var a = winners[i][0];
+                var b = winners[i][1];
+                var c = winners[i][2];
+        
+                var count = 0;
+                if (checkValue(a, X)) {
+                count++;
+                }
+                if (checkValue(b, X)){
+                count++;
+                }
+                if (checkValue(c, X)) {
+                count++;
+                }
+        
+                // block winner
+                if (count == 2) {
+                for (var j=0; j < 3; j++) {
+                    if (checkValue(winners[i][j], EMPTY)) {
+                    tic(winners[i][j], O);
+                    return;
+                    }
+                }
+                }
+            }
+            
+            // Attack if dangerous
+            if ((checkValue(dangerous[0][0], X) && checkValue(dangerous[0][1], X)) ||
+                (checkValue(dangerous[1][0], X) && checkValue(dangerous[1][1],X))) {
+                
+                if (checkValue(8, EMPTY)) {
+                tic(8, O);
+                return;
+                }
+                if (checkValue(6, EMPTY)) {
+                tic(6, O);
+                return;
+                }
+        
+                if (checkValue(2, EMPTY)) {
+                tic(2, O);
+                return;
+                }
+        
+                if (checkValue(4, EMPTY)) {
+                tic(4, O);
+                return;
+                }
+            }
+        
+            // get open moves
+            var possible = [];
+            for (var i=1; i < 10; i++) {
+            if (checkValue(i, EMPTY)) {
+                possible.push(i);
+            }
+            }
+            
+            // choose random move from open spots
+            if (possible.length > 0) {
+            var val = possible[Math.floor(Math.random() * possible.length)];
+            tic(val, O);
+            }
+        }
+        
+        function checkWinner() {
+            if (checkWin()) {
+            document.getElementById('status').innerHTML = 'Winner, winner, chicken dinner!';
+            return true;
+            }
+            return false;
+        }
+        function checkWin() {
+            for (var i=0; i < 8; i++) {
+            if (checkSet(winners[i][0], winners[i][1], winners[i][2])) {
+                document.getElementById(winners[i][0]).style.color = "green";
+                document.getElementById(winners[i][1]).style.color = "green";
+                document.getElementById(winners[i][2]).style.color = "green";
+                return true;
+            }
+            }
+            return false;
+        }
+        
+        function checkSet(a, b, c) {
+            if (checkValue(a, EMPTY) && checkValue(b, EMPTY) && checkValue(c, EMPTY)) {
+            return false;
+            }
+        
+            return document.getElementById(a).innerHTML === document.getElementById(c).innerHTML &&
+                    document.getElementById(b).innerHTML === document.getElementById(c).innerHTML;
+        }
+        
+        function reset() {
+            for(i=1; i<10; i++) {
+            document.getElementById(i).innerHTML = EMPTY;
+            document.getElementById(i).style.color = "black";
+            }
+            document.getElementById('status').innerHTML = '';
+        }
+    </script>
+    <style>
+        #status {
+            font-family: Lato;
+            }
+            
+            td {
+            border: 1px solid black;
+            height: 50px;
+            width: 50px;
+            font-family: Lato;
+            text-align: center;
+            font-size: xx-large;
+            }
+    </style>
+  </head>
+  <body>
+    <div id="board">
+        <div id="status"></div>
+        <table>
+            <tr>
+            <td id="1" onclick="tic(this.id, 'X')"></td>
+            <td id="2" onclick="tic(this.id, 'X')"></td>
+            <td id="3" onclick="tic(this.id, 'X')"></td>
+            </tr>
+            <tr>
+            <td id="4" onclick="tic(this.id, 'X')"></td>
+            <td id="5" onclick="tic(this.id, 'X')"></td>
+            <td id="6" onclick="tic(this.id, 'X')"></td>
+            </tr>
+            <tr>
+            <td id="7" onclick="tic(this.id, 'X')"></td>
+            <td id="8" onclick="tic(this.id, 'X')"></td>
+            <td id="9" onclick="tic(this.id, 'X')"></td>
+            </tr>
+        </table>
+        <button onclick="reset()">New Game</button>
+    </div>
+ </body>
+</html>
