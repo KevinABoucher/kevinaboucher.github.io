@@ -1,7 +1,8 @@
 <html>
-    <head>
-    <script type="text/javascript">
-        var X = 'X';
+
+<head>
+  <script type="text/javascript">
+    var X = 'X';
         var O = 'O';
         var EMPTY = '';
         var winners = [ [1, 2, 3],
@@ -12,8 +13,6 @@
                         [3, 6, 9],
                         [1, 5, 9],
                         [3, 5, 7] ];
-            var dangerous = [ [1, 9],
-                            [3, 7]];              
         
         function tic(id, c) {
             var current = document.getElementById(id);
@@ -90,37 +89,45 @@
                 }
                 }
             }
-            
-            // Attack if dangerous
-            if ((checkValue(dangerous[0][0], X) && checkValue(dangerous[0][1], X)) ||
-                (checkValue(dangerous[1][0], X) && checkValue(dangerous[1][1],X))) {
-                
-                if (checkValue(8, EMPTY)) {
-                tic(8, O);
-                return;
-                }
-                if (checkValue(6, EMPTY)) {
-                tic(6, O);
-                return;
-                }
-        
-                if (checkValue(2, EMPTY)) {
-                tic(2, O);
-                return;
-                }
-        
-                if (checkValue(4, EMPTY)) {
-                tic(4, O);
-                return;
-                }
+
+            // take the center
+            if (checkValue(5, EMPTY)) {
+              tic(5, O);
+              return;
             }
-        
+
+            // mirror
+            if (checkValue(1, X)) {
+              if (checkValue(9, EMPTY)) {
+                tic(9, O);
+                return;
+              }
+            }
+            if (checkValue(3, X)) {
+              if (checkValue(7, EMPTY)) {
+                tic(7, O);
+                return;
+              }
+            }
+            if (checkValue(7, X)) {
+              if (checkValue(3, EMPTY)) {
+                tic(3, O);
+                return;
+              }
+            }
+            if (checkValue(9, X)) {
+              if (checkValue(1, EMPTY)) {
+                tic(1, O);
+                return;
+              }
+            }
+
             // get open moves
             var possible = [];
             for (var i=1; i < 10; i++) {
-            if (checkValue(i, EMPTY)) {
-                possible.push(i);
-            }
+              if (checkValue(i, EMPTY)) {
+                  possible.push(i);
+              }
             }
             
             // choose random move from open spots
@@ -165,43 +172,45 @@
             }
             document.getElementById('status').innerHTML = '';
         }
-    </script>
-    <style>
-        #status {
-            font-family: Lato;
-            }
-            
-            td {
-            border: 1px solid black;
-            height: 50px;
-            width: 50px;
-            font-family: Lato;
-            text-align: center;
-            font-size: xx-large;
-            }
-    </style>
-  </head>
-  <body>
-    <div id="board">
-        <div id="status"></div>
-        <table>
-            <tr>
-            <td id="1" onclick="tic(this.id, 'X')"></td>
-            <td id="2" onclick="tic(this.id, 'X')"></td>
-            <td id="3" onclick="tic(this.id, 'X')"></td>
-            </tr>
-            <tr>
-            <td id="4" onclick="tic(this.id, 'X')"></td>
-            <td id="5" onclick="tic(this.id, 'X')"></td>
-            <td id="6" onclick="tic(this.id, 'X')"></td>
-            </tr>
-            <tr>
-            <td id="7" onclick="tic(this.id, 'X')"></td>
-            <td id="8" onclick="tic(this.id, 'X')"></td>
-            <td id="9" onclick="tic(this.id, 'X')"></td>
-            </tr>
-        </table>
-        <button onclick="reset()">New Game</button>
-    </div>
- </body>
+  </script>
+  <style>
+    #status {
+      font-family: Lato;
+    }
+
+    td {
+      border: 1px solid black;
+      height: 50px;
+      width: 50px;
+      font-family: Lato;
+      text-align: center;
+      font-size: xx-large;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="board">
+    <div id="status"></div>
+    <table>
+      <tr>
+        <td id="1" onclick="tic(this.id, 'X')"></td>
+        <td id="2" onclick="tic(this.id, 'X')"></td>
+        <td id="3" onclick="tic(this.id, 'X')"></td>
+      </tr>
+      <tr>
+        <td id="4" onclick="tic(this.id, 'X')"></td>
+        <td id="5" onclick="tic(this.id, 'X')"></td>
+        <td id="6" onclick="tic(this.id, 'X')"></td>
+      </tr>
+      <tr>
+        <td id="7" onclick="tic(this.id, 'X')"></td>
+        <td id="8" onclick="tic(this.id, 'X')"></td>
+        <td id="9" onclick="tic(this.id, 'X')"></td>
+      </tr>
+    </table>
+    <button onclick="reset()">New Game</button>
+  </div>
+</body>
+
 </html>
