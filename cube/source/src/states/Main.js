@@ -251,9 +251,26 @@ class Main extends Phaser.State {
 
 		this.wordLabel = this.game.add.text(this.game.world.centerX, this.topBuffer - 140, "", style); 
 		this.wordLabel.anchor.setTo(0.5, 0);
+
+		if (this.game.handheldLayout) {
+			this.recentWords = this.game.add.text(this.game.world.centerX,
+				this.topBuffer + this.boardHeight + 140, "", {
+					font: "38px Arial", align: "center", fill: "#ffffff",
+					stroke: "#535353", strokeThickness: 2,
+					wordWrap: true, wordWrapWidth: this.boardWidth
+				});
+			this.recentWords.anchor.setTo(0.5, 0);
+		} else {
+			this.recentWords = null;
+		}
 	}
 
 	logWord(correctWord) {
+		if (this.recentWords) {
+			this.recentWords.text = this.correctWords.slice(-3).concat(correctWord).join('  ·  ');
+			return;
+		}
+
 		var style = {font: "38px Arial", align: "left", fill: "#ffffff", stroke: "#535353", strokeThickness: 2};
 		this.worldLog = this.game.add.text(this.game.world.centerX + this.tileGrid.length * (this.tileWidth / 2) + 60, this.topBuffer + 40 + this.logOffset, correctWord, style); 
 		this.worldLog.anchor.setTo(0.5, 0);
